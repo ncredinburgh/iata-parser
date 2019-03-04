@@ -26,30 +26,43 @@ public final class UTCCalendarFactory
 {
     public static final TimeZone UTC = TimeZone.getTimeZone("UTC");
     
+    /**
+     *  @param forward : indicates if the evaluation has to be done for a future or a past flight
+     * 					Default value is true to respect the previous code	
+     */
+    public static Boolean forward = true;
 
     private UTCCalendarFactory()
     {
     }
 
-    public static Calendar getInstanceForDayOfYear(int dayOfYear, Boolean forward)
+    public static Calendar getInstanceForDayOfYear(int dayOfYear)
     {
-    	forward = (forward != null) ? forward : true;
-        return getInstanceForDayOfYear(dayOfYear, Calendar.getInstance(UTC), forward);
+        return getInstanceForDayOfYear(dayOfYear, Calendar.getInstance(UTC));
     }
+    
+	public static Calendar getInstanceForDayOfYearBackward(int dayOfYear) {
+		setForward(false);
+		return getInstanceForDayOfYear(dayOfYear);
+	}
 
-    /**
+    public static Boolean getForward() {
+		return forward;
+	}
+
+	public static void setForward(Boolean forward) {
+		UTCCalendarFactory.forward = forward;
+	}
+
+	/**
      * Creates {@link Calendar} instance in UTC from the given <code>dayOfYear</code>
      *
      * @param dayOfYear the day of year
-     * @param forward : indicates if the evaluation has to be done for a future or a past flight
-     * 					Default value is true to respect the previous code	
      * @param now the calendar representing the current date/time in UTC.
      * @return the new {@link Calendar} instance in UTC
      */
-    static Calendar getInstanceForDayOfYear(int dayOfYear, Calendar utc, Boolean forward)
+    static Calendar getInstanceForDayOfYear(int dayOfYear, Calendar utc)
     {
-    	forward = (forward != null) ? forward : true;
-    	
     	// getting current date in UTC
         int utcDayOfYear = utc.get(Calendar.DAY_OF_YEAR);
         Calendar c = (Calendar) utc.clone();
@@ -78,4 +91,6 @@ public final class UTCCalendarFactory
         c.set(Calendar.HOUR_OF_DAY, 0);
         return c;
     }
+
+
 }

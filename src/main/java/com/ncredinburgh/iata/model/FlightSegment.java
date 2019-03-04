@@ -86,6 +86,11 @@ public final class FlightSegment
         return dateOfFlight;
     }
 
+    public Calendar getDateOfFlightBackward()
+    {
+    	 Integer dateOfFlight = getJulianDateOfFlight();
+         return dateOfFlight != null ? UTCCalendarFactory.getInstanceForDayOfYearBackward(dateOfFlight) : null;
+    }    
     public Calendar getDateOfFlight()
     {
         Integer dateOfFlight = getJulianDateOfFlight();
