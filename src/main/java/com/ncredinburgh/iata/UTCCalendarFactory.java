@@ -25,6 +25,12 @@ import java.util.TimeZone;
 public final class UTCCalendarFactory
 {
     public static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+    
+    /**
+     *  @param forward : indicates if the evaluation has to be done for a future or a past flight
+     * 					Default value is true to respect the previous code	
+     */
+    public static Boolean forward = true;
 
     private UTCCalendarFactory()
     {
@@ -34,8 +40,21 @@ public final class UTCCalendarFactory
     {
         return getInstanceForDayOfYear(dayOfYear, Calendar.getInstance(UTC));
     }
+    
+	public static Calendar getInstanceForDayOfYearBackward(int dayOfYear) {
+		setForward(false);
+		return getInstanceForDayOfYear(dayOfYear);
+	}
 
-    /**
+    public static Boolean getForward() {
+		return forward;
+	}
+
+	public static void setForward(Boolean forward) {
+		UTCCalendarFactory.forward = forward;
+	}
+
+	/**
      * Creates {@link Calendar} instance in UTC from the given <code>dayOfYear</code>
      *
      * @param dayOfYear the day of year
@@ -44,11 +63,11 @@ public final class UTCCalendarFactory
      */
     static Calendar getInstanceForDayOfYear(int dayOfYear, Calendar utc)
     {
-        // getting current date in UTC
+    	// getting current date in UTC
         int utcDayOfYear = utc.get(Calendar.DAY_OF_YEAR);
         Calendar c = (Calendar) utc.clone();
-
-        if (dayOfYear < utcDayOfYear)
+        
+        if (dayOfYear < utcDayOfYear && forward)
         {
             // given dayOfYear must be in the following year
             c.roll(Calendar.YEAR, 1);
@@ -72,4 +91,6 @@ public final class UTCCalendarFactory
         c.set(Calendar.HOUR_OF_DAY, 0);
         return c;
     }
+
+
 }
